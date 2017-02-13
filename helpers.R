@@ -1,5 +1,5 @@
 # helpers.R
-# Winter break part II
+# Winter break part II :)
 
 # Load Packages, download if necessary with install.packages()
 library(shiny)

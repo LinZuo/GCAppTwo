@@ -83,7 +83,7 @@ shinyServer(function(input, output) {
     TempRank <- c(RevRank[Position],CEORank[Position],SalRank[Position],HrlyRank[Position])
     # The rank function assigns the lowest value the rank of 1... This line reverses it,
     # giving the highest number a rank of 1.
-    Rank <- length(RevRank)-TempRank+1
+    Rank <- as.integer(length(RevRank)-TempRank+1)
     # Put the three columns together and BAM! you got a table
     # Disclaimer: The Metric column was created in Helpers.R
     BeautifulTable <- data_frame(Metric,Value,Rank)

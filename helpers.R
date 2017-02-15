@@ -1,14 +1,6 @@
 # helpers.R
 # Winter break part II
 
-# Load Packages, download if necessary with install.packages()
-library(shiny)
-library(XML)
-library(stringr)
-library(dplyr)
-library(ggplot2)
-library(RColorBrewer)
-library(scales) 
 
 # These four lines read in the sics500.csv file and store it as two data frames
 # The filter command removes companies that don't have an industry

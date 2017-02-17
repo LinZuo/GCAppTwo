@@ -1,5 +1,5 @@
 # helpers.R
-# Winter break part II :)
+# Winter break part II :) (:
 
 
 # These four lines read in the sics500.csv file and store it as two data frames

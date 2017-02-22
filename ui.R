@@ -8,15 +8,14 @@ shinyUI(fluidPage(
   sidebarLayout(
     sidebarPanel(
       # Text input, prompts user to type ticker
-      textInput("text", label = h5("Type ticker symbol here:"), value = "AAPL"),
+      textInput("text", label = h5("Please enter ticker symbol:"), value = "AAPL"),
       # Now includes a sumbit button
-      submitButton("Fetch!")
+      submitButton("Submit")
     ),
     
     mainPanel(
-      h2("Company Overview"),
-      ## Quick-hitters section - simple text outputs to display name, sector, industry, and number, all generated in server.R
-      h3("Quick-Hitters:"),
+      h3("Company Overview"),
+      br(),
       h5("Name:"),
       textOutput("name"),
       h5("Sector:"),
@@ -25,8 +24,10 @@ shinyUI(fluidPage(
       textOutput("industry"),
       h5("Number of Companies in the Industry:"),
       textOutput("number"),
+      br(),
       ## Table with rankings printed
-      h3("Table"),
+      h3("Data Table"),
+      br(),
       tableOutput("table")
     )
   )

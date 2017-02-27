@@ -42,4 +42,4 @@ TableCOPY$`F/M Pay Ratio of Hourly Employees` <- sub(".........$", "", TableCOPY
 # This line changes the revenue numbers into dollar formatted nubmers ($1,000,000.00 vs. 1000000.0000)
 TableCOPY$`Total Revenue` <- dollar_format()(TableCOPY$`Total Revenue`)
 # Metric is a simple variable to be used in one column of the table
-Metric <- c('2015 Revenue (Millions of $)','CEO Pay Ratio','Gender Pay Ratio (salaried)','Gender Pay Ratio (hourly)')
+Metric <- c('2015 Revenue [million USD]','CEO Pay Ratio','Female/Male Pay Ratio (salaried)','Female/Male Pay Ratio (hourly)')

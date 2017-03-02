@@ -9,6 +9,8 @@ shinyUI(fluidPage(
     sidebarPanel(
       # Text input, prompts user to type ticker
       textInput("text", label = h5("Please enter ticker symbol:"), value = "AAPL"),
+      # Insert the link to look up ticker symbol
+      a(hype="https://www.bloomberg.com/markets/symbolsearch", "Bloomberg's ticker lookup"),
       # Now includes a sumbit button
       submitButton("Submit")
     ),

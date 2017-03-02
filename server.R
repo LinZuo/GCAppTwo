@@ -56,6 +56,8 @@ shinyServer(function(input, output) {
 ## This is where the table is created:
   output$table <- renderTable({
     TheTicker <- toupper(input$text)
+    # vector indicating the polarity of the metrics contained in the table
+    Polarity <- c("+", "-", "+", "+")
     # TableCOPY is a dataframe created in helpers.R and is a refined conjoinment of sics500, compensation, and fundamentals500
     # The next four which commands work very similarly to the ones above but are now searching through TableCOPY
     # The commands return the 6,7,8 & 9th value of TableCOPY, which are 2015 Revenue, CEO Pay Ratio,
@@ -72,22 +74,18 @@ shinyServer(function(input, output) {
     # The following four rank functions assign a rank to each company in the industrycompanies matrix
     # This is completed in four steps, one for each column to be ranked in industrycompanies, 
     # the results stores in their own variable.
-    # At the moment, 'rank' gives the lowest number a rank of 1
-    RevRank <- rank(industrycompanies[,6])
+    RevRank <- rank(-industrycompanies[,6])
     CEORank <- rank(industrycompanies[,7])
-    SalRank <- rank(industrycompanies[,8])
-    HrlyRank <- rank(industrycompanies[,9])
+    SalRank <- rank(-industrycompanies[,8])
+    HrlyRank <- rank(-industrycompanies[,9])
     # The final table requires just the rank of the company of interest, not all the companies in the industrycompanies matrix
     # Thus this line identifies where in the industrycompanies the company is located, so we can print out
     # the desired ranking
     Position <- which(industrycompanies$Ticker==TheTicker)
     # This line stores the four rankings as one column to be put into the final table
-    TempRank <- c(RevRank[Position],CEORank[Position],SalRank[Position],HrlyRank[Position])
-    # The rank function assigns the lowest value the rank of 1... This line reverses it,
-    # giving the highest number a rank of 1.
-    Rank <- as.integer(length(RevRank)-TempRank+1)
+    Rank <- as.integer(c(RevRank[Position],CEORank[Position],SalRank[Position],HrlyRank[Position]))
     # Put the three columns together and BAM! you got a table
     # Disclaimer: The Metric column was created in Helpers.R
-    BeautifulTable <- data_frame(Metric,Value,Rank)
+    BeautifulTable <- data_frame(Metric, Polarity, Value, Rank)
   })
 })

@@ -1,5 +1,5 @@
 # helpers.R
-# Winter break part II :)
+# Winter break part II :) (:
 
 
 # These four lines read in the sics500.csv file and store it as two data frames
@@ -31,6 +31,8 @@ COMP <- COMP[,c(2,20,21,22)]
 TheTable <- left_join(SICS,FUND,"Ticker") %>% left_join(COMP,"Ticker")
 # Once again, a copy is made for future use. Note below, TableCopy undergoes format changes while TheTable doesn't
 TableCOPY <- TheTable
+# Conver the Total Revenue value from dollars to millions of dollars
+TableCOPY$`Total Revenue` <- (TableCOPY$`Total Revenue`)/1000000
 # Next four lines help format the table created in server.R
 # This line removes decimals from the CEO pay ratio column
 TableCOPY$`CEO Pay Ratio` <- floor(TableCOPY$`CEO Pay Ratio`)
@@ -40,4 +42,4 @@ TableCOPY$`F/M Pay Ratio of Hourly Employees` <- sub(".........$", "", TableCOPY
 # This line changes the revenue numbers into dollar formatted nubmers ($1,000,000.00 vs. 1000000.0000)
 TableCOPY$`Total Revenue` <- dollar_format()(TableCOPY$`Total Revenue`)
 # Metric is a simple variable to be used in one column of the table
-Metric <- c('2015 Revenue','CEO Pay Ratio','Gender Pay Ratio (salaried)','Gender Pay Ratio (hourly)')
+Metric <- c('2015 Revenue [million USD]','CEO Pay Ratio','Female/Male Pay Ratio (salaried)','Female/Male Pay Ratio (hourly)')

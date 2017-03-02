@@ -67,9 +67,9 @@ shinyServer(function(input, output) {
     # The four strings are stores in the variable 'Value'
     # Value will be one of three columns put together to form the whole table
     Value <- c(as.character(TableCOPY[which(TableCOPY$Ticker == TheTicker),][6]),
-               as.character(TableCOPY[which(TableCOPY$Ticker == TheTicker),][7]),
-               as.character(TableCOPY[which(TableCOPY$Ticker == TheTicker),][8]),
-               as.character(TableCOPY[which(TableCOPY$Ticker == TheTicker),][9]))
+               as.character(as.integer(TableCOPY[which(TableCOPY$Ticker == TheTicker),][7])),
+               as.character(round(as.numeric(TableCOPY[which(TableCOPY$Ticker == TheTicker),][8]), 2)),
+               as.character(round(as.numeric(TableCOPY[which(TableCOPY$Ticker == TheTicker),][9]), 2)))
     # industrycompanies is a matrix created by filtering TheTable by only companies in the same industry
     # as the user-selected company - using the same/a similar which command as before
     industrycompanies <- TheTable[which(TheTable$Industry == as.character(SICS[which(SICS$Ticker == TheTicker),][4])),]

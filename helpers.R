@@ -1,5 +1,5 @@
 # helpers.R
-# Winter break part II :) (:
+# Combined App!
 
 
 # These four lines read in the sics500.csv file and store it as two data frames
@@ -28,7 +28,7 @@ FUND <- filter(FUND,Year==2015)
 # This trims the COMP frame similar to how the FUND frame was
 COMP <- COMP[,c(2,20,21,22)]
 # TheTable is a data frame that is a composition of the SICS, FUND, and COMP data frames
-TheTable <- left_join(SICS,FUND,"Ticker") %>% left_join(COMP,"Ticker")
+TheTable <- left_join(SICSCOPY,FUND,"Ticker") %>% left_join(COMP,"Ticker")
 # Once again, a copy is made for future use. Note below, TableCopy undergoes format changes while TheTable doesn't
 TableCOPY <- TheTable
 # Conver the Total Revenue value from dollars to millions of dollars

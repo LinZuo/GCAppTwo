@@ -64,25 +64,7 @@ shinyServer(function(input, output, session) {
       labs(title = "Histogram for CEO Pay Ratio of All Firms") +
       labs(x = "Firms",y = "Count")
   })
-  ## These two following sections enable the data download feature
-  # the reactive switch statement assigns datasetInput to be whichever matrix/dataframe
-  # the user chooses from the drop-down menu
-  datasetInput <- reactive({
-    switch(input$dataset,
-           "Sics" = sics,
-           "Fundamentals" = fund,
-           "Compensation" = comp)
-  })
-  # This section I copied straight from the shiny gallery.
-  # The first part creates the filename, and the last part creates the data file to be downloaded
-  output$download.data <- downloadHandler(
-    filename = function() {
-      paste(input$dataset, '.csv', sep='')
-    },
-    content = function(file) {
-      write.csv(datasetInput(), file)
-    }
-  )
+  
   ### APP 2 ###
   # This line uses the action button. The action button stores its value as input$submit,
   # whenever the user changes the value of the text, and presses submit, the second argument runs:
@@ -163,4 +145,33 @@ shinyServer(function(input, output, session) {
     # Disclaimer: The Metric column was created in Helpers.R
     beautiful.table <- data_frame(metric, polarity, value, rank)
   })
+  
+  ### Data Explorer Tab ###
+  ## These two following sections enable the data download feature
+  # the reactive switch statement assigns datasetInput to be whichever matrix/dataframe
+  # the user chooses from the drop-down menu
+  datasetInput <- reactive({
+    switch(input$dataset,
+           "sics500" = sics,
+           "fundamentals500" = fund,
+           "compensation" = comp,
+           "Full Table" = table.copy)
+  })
+  # This section I copied straight from the shiny gallery.
+  # The first part creates the filename, and the last part creates the data file to be downloaded
+  output$download.data <- downloadHandler(
+    filename = function() {
+      paste(input$dataset, '.csv', sep='')
+    },
+    content = function(file) {
+      write.csv(datasetInput(), file)
+    }
+  )
+  output$table.explore <- renderDataTable({
+    if (input$dataset=="Full Table") {
+      table.copy[, input$show.vars, drop = FALSE]
+    } else {
+      datasetInput()
+    }
+  },options = list(lengthMenu = c(10, 30, 50), pageLength = 10, orderClasses = T))
 })

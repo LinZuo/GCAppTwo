@@ -13,11 +13,7 @@ tabPanel("Industry View",
              radioButtons("radio", label = h5("Select a type of plot to display"),
                           choices = list("histogram of CEO pay ratio" = 1, 
                                          "scatter plot of CEO pay ratio vs. total revenue" = 2), 
-                          selected = 1),
-             helpText("Download the data used in the creation of this page"),
-             selectInput("dataset", "Choose a dataset to download:",
-                         choices = c("Sics", "Fundamentals", "Compensation")),
-             downloadButton('download.data', 'Download')
+                          selected = 1)
            ),
            mainPanel(
              # Simple outputs
@@ -60,5 +56,23 @@ tabPanel("Company View",
              tableOutput("table.rank")
            )
          )
-      )
+      ),
+tabPanel("Data Explorer",
+            titlePanel("Explore Our Data!"),
+            sidebarLayout(
+              sidebarPanel(
+                helpText("View and download the data used in the creation of this page"),
+                selectInput("dataset", "Choose a dataset to explore:",
+                            choices = c("sics500", "fundamentals500", "compensation","Full Table")),
+                conditionalPanel('input.dataset=="Full Table"',
+                                 helpText("Full Table is a combination of the three individual sets"),
+                                 checkboxGroupInput('show.vars', 'Columns in the full table to show:',
+                                                    names(table.copy), selected = names(table.copy))),
+                downloadButton('download.data', 'Download')
+              ),
+              mainPanel(
+                dataTableOutput("table.explore")
+              )
+            )
+        )
 ))

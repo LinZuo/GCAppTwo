@@ -66,8 +66,7 @@ tabPanel("Data Explorer",
                             choices = c("sics500", "fundamentals500", "compensation","Full Table")),
                 conditionalPanel('input.dataset=="Full Table"',
                                  helpText("Full Table is a combination of the three individual sets"),
-                                 checkboxGroupInput('show.vars', 'Columns in the full table to show:',
-                                                    names(table.copy), selected = names(table.copy))),
+                                 uiOutput("check")),
                 downloadButton('download.data', 'Download')
               ),
               mainPanel(

@@ -157,6 +157,10 @@ shinyServer(function(input, output, session) {
            "compensation" = comp,
            "Full Table" = table.copy)
   })
+  output$check <- renderUI({
+    checkboxGroupInput('show.vars', 'Columns in the full table to show:',
+                       names(table.copy), selected = names(table.copy))
+  })
   # This section I copied straight from the shiny gallery.
   # The first part creates the filename, and the last part creates the data file to be downloaded
   output$download.data <- downloadHandler(

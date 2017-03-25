@@ -2,6 +2,18 @@
 # Combined App!
 
 shinyUI(navbarPage("Navbar!",
+tabPanel("Home",
+         titlePanel("Welcome!"),
+         h3("About Greener Change:"),
+         p("Greener Change is a database for impact investing. Financials are important, 
+           but we want you to consider the triple bottom line of a company before you 
+           invest your support in them."),
+         p("We have collected data on companies in the S&P 500. Feel free to consider 
+           one industry at a time under the 'Industry View' tab. To look closer into one 
+           company, search by ticker symbol in the 'Company View' tab. Lastly, we included 
+           the data that we used to create this page under the last tab. View and download at 
+           your convenience.")
+         ),
 tabPanel("Industry View",
          titlePanel("S&P 500 Companies"),
          sidebarLayout(
@@ -23,7 +35,7 @@ tabPanel("Industry View",
              plotOutput("full.plot")
            )
          )
-),
+         ),
 tabPanel("Company View",
          titlePanel("S&P 500 Companies"),
          sidebarLayout(

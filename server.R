@@ -20,9 +20,9 @@ shinyServer(function(input, output, session) {
   # This output creates the dropdown menu that appears in the sidebar
   # This is created in server.R so that we only have to source helpers.R once,
   # and not every timet he app is used
-  output$select <- renderUI({
-    selectInput("industry", label = h5("Select an industry"),
-                choices = levels(sics.copy$Industry), selected = levels(sics.copy$Industry)[63])
+  observe({
+    thesector <- input$sector
+    updateSelectInput(session, "industry", "Select an industry", choice = unique(sics.copy%>%filter(Sector == thesector)%>%select(Industry)))
   })
   # Prints a copy of the.table filtered by whatever industry the user selects
   output$table <- renderTable({

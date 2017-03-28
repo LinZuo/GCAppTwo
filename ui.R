@@ -20,8 +20,9 @@ tabPanel("Industry View",
            sidebarPanel(
              # This uiOutput command prints out user interface created in the server.R file.
              # It is created in server since there are reactive components to it.
-             selectInput("sector","Select a sector", sics.copy$Sector),
-             selectInput("industry", "Select an industry", ""),
+             uiOutput("selectsector"),
+             uiOutput("selectindustry"),
+             #selectInput("industry", "Select an industry", ""),
              # I copy and pasted all of these widgets from the shiny gallery
              radioButtons("radio", label = h5("Select a type of plot to display"),
                           choices = list("histogram of CEO pay ratio" = 1, 

@@ -32,6 +32,7 @@ shinyServer(function(input, output, session) {
   # Prints a copy of the.table filtered by whatever industry the user selects
   output$table <- renderTable({
     the.table <- filter(table.copy,Industry==as.character(input$industry))
+    final.table <- the.table[,c(1,2,5:9)]
   })
   # Displays either a histogram or a scatter plot - whichever the user selects - 
   # of just the firms in the industry that the user selects

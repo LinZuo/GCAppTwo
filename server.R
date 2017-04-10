@@ -22,57 +22,36 @@ shinyServer(function(input, output, session) {
   # and not every timet he app is used
   output$selectsector <- renderUI({
     selectInput("thesector", label = h5("Select a sector"),
-                choices = levels(sics.copy$Sector), selected = levels(sics.copy$Sector)[63])
+                choices = levels(sics.copy$Sector), selected = levels(sics.copy$Sector)[10])
   })
   output$selectindustry <- renderUI({
     thesector <- input$thesector
     selectInput("industry", label = h5("Select an industry"),
-                choices = unique(sics.copy%>%filter(Sector == thesector)%>%select(Industry)))
+                choices = unique(sics.copy%>%filter(Sector == thesector)%>%select(Industry)),
+                selected = "Software & IT Services")
   })
   # Prints a copy of the.table filtered by whatever industry the user selects
   output$table <- renderTable({
-    the.table <- filter(table.copy,Industry==as.character(input$industry))
-    the.table[,7] <- as.integer(round(the.table[,7]))
-    the.table[,8] <- round(as.numeric(the.table[,8]),2)
-    the.table[,9] <- round(as.numeric(the.table[,9]),2)
-    final.table <- the.table[,c(1,2,5:9)]
+    out.table <- filter(the.table,Industry==as.character(input$industry))
+    avg.rev <- mean(as.numeric(out.table$`Total Revenue`),na.rm = T)
+    avg.ceo <- mean(as.numeric(out.table$`CEO Pay Ratio`),na.rm = T)
+    avg.sal <- mean(as.numeric(out.table$`F/M Pay Ratio of Salaried Employees`),na.rm = T)
+    avg.hry <- mean(as.numeric(out.table$`F/M Pay Ratio of Hourly Employees`),na.rm = T)
+    sd.rev <- sd(as.numeric(out.table$`Total Revenue`),na.rm = T)
+    sd.ceo <- sd(as.numeric(out.table$`CEO Pay Ratio`),na.rm = T)
+    sd.sal <- sd(as.numeric(out.table$`F/M Pay Ratio of Salaried Employees`),na.rm = T)
+    sd.hry <- sd(as.numeric(out.table$`F/M Pay Ratio of Hourly Employees`),na.rm = T)
+    averages <- c("","Averages:","","","",avg.rev,avg.ceo,avg.sal,avg.hry)
+    sds <- c("","Standard Deviations:","","","",sd.rev,sd.ceo,sd.sal,sd.hry)
+    out.table[length(out.table[,1])+1,] <- averages
+    out.table[length(out.table[,1])+1,] <- sds
+    out.table[,7] <- as.integer(round(as.numeric(out.table[,7])))
+    out.table[,8] <- round(as.numeric(out.table[,8]),2)
+    out.table[,9] <- round(as.numeric(out.table[,9]),2)
+    out.table[,6] <- dollar_format()(as.numeric(out.table[,6])/1000000)
+    final.table <- out.table[,c(1,2,6:9)]
   })
-  # Displays either a histogram or a scatter plot - whichever the user selects - 
-  # of just the firms in the industry that the user selects
-  output$switch.plot <- renderPlot({
-    # First, both the histogram and scatter plot are created and stored in separate variables
-    # Since these plots only depict the selected industry, the "data =" and "aes" arguments
-    # include a filter command to filter the.table by industry
-    industry.histo <- ggplot(data=filter(the.table,the.table$Industry==as.character(input$industry)), 
-        aes(filter(the.table,the.table$Industry==as.character(input$industry))$`CEO Pay Ratio`)) +
-      geom_histogram(breaks=seq(0,700, by = 25),col="red",aes(fill=..count..)) +
-      labs(title = "Histogram for CEO Pay Ratio") +
-      labs(x = "Firms",y = "Count")
-    industry.scatter <- ggplot(data=filter(table.copy,the.table$Industry==as.character(input$industry)), 
-                               aes(x = `Total Revenue`, y = `CEO Pay Ratio`, label = Company)) +
-      geom_point(aes(color = "red")) +
-      labs(title="Scatter Plot") +
-      labs(x="Total Revenue", y="CEO Pay Ratio") +
-      geom_text(size = 2, vjust = -0.75, fontface = "bold") +
-      geom_smooth(method=lm)
-    # This if structure tells R which plot to display on the UI based on which one the user picks
-    # The if tree looks at the value of the radio buttons, the first button corresponds to 
-    # the histogram, thus if input$radio==1, the tree returns the histogram, 
-    # If the second button is selected, then scatter is returned
-    if (input$radio==1) {
-      industry.histo
-    } else {
-      industry.scatter
-    }
-  })
-  # Simple renderPlot function, using the ggplot of a histogram from past exercises
-  # This histogram is of all the firms in all industries
-  output$full.plot <- renderPlot({
-    ggplot(data=the.table, aes(the.table$`CEO Pay Ratio`)) +
-      geom_histogram(breaks=seq(0,700, by = 25),col="red",aes(fill=..count..)) +
-      labs(title = "Histogram for CEO Pay Ratio of All Firms") +
-      labs(x = "Firms",y = "Count")
-  })
+  
   
   ### APP 2 ###
   # This line uses the action button. The action button stores its value as input$submit,

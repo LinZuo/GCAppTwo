@@ -32,6 +32,9 @@ shinyServer(function(input, output, session) {
   # Prints a copy of the.table filtered by whatever industry the user selects
   output$table <- renderTable({
     the.table <- filter(table.copy,Industry==as.character(input$industry))
+    the.table[,7] <- as.integer(round(the.table[,7]))
+    the.table[,8] <- round(as.numeric(the.table[,8]),2)
+    the.table[,9] <- round(as.numeric(the.table[,9]),2)
     final.table <- the.table[,c(1,2,5:9)]
   })
   # Displays either a histogram or a scatter plot - whichever the user selects - 

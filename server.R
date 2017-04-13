@@ -9,7 +9,7 @@ library(dplyr)
 library(ggplot2)
 library(RColorBrewer)
 library(scales)
-
+library(shinythemes)
 
 # Source file called helpers.R - should be in the same working directory as the app
 source("helpers.R")

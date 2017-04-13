@@ -1,7 +1,7 @@
 # ui.R
 # Combined App!
-
-shinyUI(navbarPage("Navbar!",
+library(shinythemes)
+shinyUI(navbarPage("Greener Change",theme = shinytheme("yeti"),
 tabPanel("Home",
          titlePanel("Welcome!"),
          h3("About Greener Change:"),

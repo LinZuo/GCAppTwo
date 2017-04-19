@@ -41,8 +41,7 @@ tabPanel("Company View",
              br(),
              br(),
              # Insert the link to look up ticker symbol
-             a(href="https://www.bloomberg.com/markets/symbolsearch", 
-               "Bloomberg's ticker lookup", target = "_blank")
+             uiOutput("url")
            ),
            mainPanel(
              h3("Company Overview"),

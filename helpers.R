@@ -47,3 +47,4 @@ table.copy$`Total Revenue` <- dollar_format()(table.copy$`Total Revenue`)
 # metric is a simple variable to be used in one column of the table
 metric <- c('2015 Revenue [million USD]','CEO Pay Ratio',
             'Female/Male Pay Ratio (salaried)','Female/Male Pay Ratio (hourly)')
+table.copy <- table.copy[,c(1,2,3,4,6,7,8,9)]

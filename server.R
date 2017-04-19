@@ -32,6 +32,7 @@ shinyServer(function(input, output, session) {
   })
   # Prints a copy of the.table filtered by whatever industry the user selects
   output$table <- renderTable({
+    the.table <- the.table[,c(1:4,6:9)]
     out.table <- filter(the.table,Industry==as.character(input$industry))
     avg.rev <- mean(as.numeric(out.table$`Total Revenue`),na.rm = T)
     avg.ceo <- mean(as.numeric(out.table$`CEO Pay Ratio`),na.rm = T)
@@ -41,15 +42,16 @@ shinyServer(function(input, output, session) {
     sd.ceo <- sd(as.numeric(out.table$`CEO Pay Ratio`),na.rm = T)
     sd.sal <- sd(as.numeric(out.table$`F/M Pay Ratio of Salaried Employees`),na.rm = T)
     sd.hry <- sd(as.numeric(out.table$`F/M Pay Ratio of Hourly Employees`),na.rm = T)
-    averages <- c("","Averages:","","","",avg.rev,avg.ceo,avg.sal,avg.hry)
-    sds <- c("","Standard Deviations:","","","",sd.rev,sd.ceo,sd.sal,sd.hry)
-    out.table[length(out.table[,1])+1,] <- averages
-    out.table[length(out.table[,1])+1,] <- sds
-    out.table[,7] <- as.integer(round(as.numeric(out.table[,7])))
-    out.table[,8] <- round(as.numeric(out.table[,8]),2)
-    out.table[,9] <- round(as.numeric(out.table[,9]),2)
-    out.table[,6] <- dollar_format()(as.numeric(out.table[,6])/1000000)
-    final.table <- out.table[,c(1,2,6:9)]
+    averages <- c("","Industry Averages:","","",avg.rev,avg.ceo,avg.sal,avg.hry)
+    sds <- c("","Industry Standard Deviations:","","",sd.rev,sd.ceo,sd.sal,sd.hry)
+    final.table <- rbind(averages,sds,out.table)
+    # out.table[length(out.table[,1])+1,] <- averages
+    # out.table[length(out.table[,1])+1,] <- sds
+    final.table[,6] <- as.integer(round(as.numeric(final.table[,6])))
+    final.table[,7] <- round(as.numeric(final.table[,7]),2)
+    final.table[,8] <- round(as.numeric(final.table[,8]),2)
+    final.table[,5] <- dollar_format()(as.numeric(final.table[,5])/1000000)
+    final.table <- final.table[,c(1,2,5:8)]
   })
   
   
@@ -59,6 +61,11 @@ shinyServer(function(input, output, session) {
   # it stores the ticker symbol as a character in upper case letters to "submitTicker"
   submit.ticker <- eventReactive(input$submit, {
     as.character(toupper(input$text))
+  })
+  output$url <- renderUI({
+    ticker.url <- paste0("https://www.bloomberg.com/markets/symbolsearch?query=",
+                         input$text,"&commit=Find+Symbols")
+    a(href=ticker.url,"Bloomberg's ticker lookup", target = "_blank")
   })
 ## The following renderText lines use the 'which' function to filter sics
 ## to only display company info for whichever company the user types in (by their ticker)
@@ -107,10 +114,10 @@ shinyServer(function(input, output, session) {
     # F/M pay ratio among salaried employees, and F/M ratio of hourly workers, respectively
     # The four strings are stores in the variable 'Value'
     # Value will be one of three columns put together to form the whole table
-    value <- c(as.character(table.copy[which(table.copy$Ticker == submit.ticker()),][6]),
-               as.character(as.integer(table.copy[which(table.copy$Ticker == submit.ticker()),][7])),
-               as.character(round(as.numeric(table.copy[which(table.copy$Ticker == submit.ticker()),][8]), 2)),
-               as.character(round(as.numeric(table.copy[which(table.copy$Ticker == submit.ticker()),][9]), 2)))
+    value <- c(as.character(table.copy[which(table.copy$Ticker == submit.ticker()),][5]),
+               as.character(as.integer(table.copy[which(table.copy$Ticker == submit.ticker()),][6])),
+               as.character(round(as.numeric(table.copy[which(table.copy$Ticker == submit.ticker()),][7]), 2)),
+               as.character(round(as.numeric(table.copy[which(table.copy$Ticker == submit.ticker()),][8]), 2)))
     # industrycompanies is a matrix created by filtering the.table by only companies in the same industry
     # as the user-selected company - using the same/a similar which command as before
     industry.companies <- the.table[which(the.table$Industry == as.character(
@@ -118,10 +125,10 @@ shinyServer(function(input, output, session) {
     # The following four rank functions assign a rank to each company in the industrycompanies matrix
     # This is completed in four steps, one for each column to be ranked in industrycompanies, 
     # the results stores in their own variable.
-    rev.rank <- rank(-industry.companies[,6])
-    ceo.rank <- rank(industry.companies[,7])
-    sal.rank <- rank(-industry.companies[,8])
-    hrly.rank <- rank(-industry.companies[,9])
+    rev.rank <- rank(-industry.companies[,5])
+    ceo.rank <- rank(industry.companies[,6])
+    sal.rank <- rank(-industry.companies[,7])
+    hrly.rank <- rank(-industry.companies[,8])
     # The final table requires just the rank of the company of interest, not all 
     # the companies in the industrycompanies matrix. Thus this line identifies 
     # where in the industrycompanies the company is located, so we can print out
